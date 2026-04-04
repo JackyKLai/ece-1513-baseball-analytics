@@ -34,15 +34,96 @@
 \usepackage{graphicx}
 \usepackage{tikz}
 \usepackage{xcolor}
-
 \begin{document}
 
 \frame{\titlepage}
+\setcounter{framenumber}{0}
 
+\begin{frame}[t]
+\frametitle{Problem \& Dataset}
 
-\begin{frame}
-\frametitle{Slide 1}
-This is some text in the first frame. This is some text in the first frame. This is some text in the first frame.
+\vspace{-2pt}
+{\small\textbf{Goal:} Predict team wins in season $t$ from previous-season stats --- \textbf{supervised regression}.}
+
+\vspace{5pt}
+\begin{columns}[T]
+
+% ════ LEFT COLUMN ════
+\begin{column}{0.47\textwidth}
+
+\begin{block}{\scriptsize Dataset}
+\vspace{-4pt}
+{\scriptsize
+\begin{itemize}
+  \setlength{\itemsep}{0pt}
+  \item \textbf{Lahman Baseball Database} --- \texttt{Teams}
+  \item ${\sim}$30 teams/yr $\times$ ${\sim}$20 seasons $\approx$ \textbf{600 rows}
+  \item Years 2000--2025, \textbf{excl.\ 2020} (COVID)
+\end{itemize}
+}
+\vspace{-4pt}
+\end{block}
+
+\vspace{2pt}
+{\scriptsize\textbf{Temporal split} (no data leakage)}\\[1pt]
+{\scriptsize
+\begin{tabular}{@{}ll@{}}
+  \textbf{Train:} & 2001--2019 (${\sim}$570 rows) \\
+  \textbf{Test:}  & 2021--2025 (${\sim}$150 rows) \\
+\end{tabular}}\\[1pt]
+{\tiny\color{gray}\itshape Features lagged one season per franchise.}
+
+\vspace{5pt}
+{\scriptsize\textbf{Pipeline} (increasing complexity)}
+\vspace{-1pt}
+{\scriptsize
+\begin{enumerate}
+  \setlength{\itemsep}{2pt}
+  \item Pythagorean expectation $\left(\text{Win\%} = \frac{R^2}{R^2 + \text{RA}^2}\right)$ {\color{gray}\itshape-- no learning}
+  \item Ridge Regression {\color{gray}\itshape-- linear}
+  \item SVR {\color{gray}\itshape-- kernel}
+  \item Neural Network {\color{gray}\itshape-- deep}
+\end{enumerate}
+}
+
+\end{column}
+
+% ════ RIGHT COLUMN ════
+\begin{column}{0.50\textwidth}
+
+\begin{block}{\scriptsize 15 Features (previous-season stats)}
+\vspace{-2pt}
+{\scriptsize
+
+\textbf{Batting (7)}\\[1pt]
+\begin{tabular}{@{}l@{\;}l@{\qquad}l@{\;}l@{}}
+  R  & Runs scored  & BB  & Walks \\
+  H  & Hits         & SO  & Strikeouts \\
+  HR & Home runs    & SB  & Stolen bases \\
+     &              & HBP & Hit by pitch \\
+\end{tabular}
+
+\vspace{3pt}
+\textbf{Pitching (6)}\\[1pt]
+\begin{tabular}{@{}l@{\;}l@{\qquad}l@{\;}l@{}}
+  RA  & Runs allowed   & BBA & Walks allowed \\
+  ERA & Earned run avg & SOA & Strikeouts (P) \\
+  HA  & Hits allowed   & HRA & HR allowed \\
+\end{tabular}
+
+\vspace{3pt}
+\textbf{Fielding (2)}\\[1pt]
+\begin{tabular}{@{}l@{\;}l@{\qquad}l@{\;}l@{}}
+  E  & Errors & FP & Fielding pct \\
+\end{tabular}
+
+}
+\vspace{-2pt}
+\end{block}
+
+\end{column}
+\end{columns}
+
 \end{frame}
 
 
@@ -81,7 +162,7 @@ FNN ~$\cdot$~ 15\,$\to$\,64\,$\to$\,32\,$\to$\,1 ~$\cdot$~ 3,137 params ~$\cdot$
 {\small\textbf{Training curve}}
  
 \vspace{2pt}
-\includegraphics[width=\textwidth]{results/neural_net/training_curve.png}
+\includegraphics[width=\textwidth]{../results/neural_net/training_curve.png}
  
 \vspace{1pt}
 {\tiny\itshape\color{gray}%
@@ -126,7 +207,7 @@ Early stopped at epoch 249 / 269 --- no overfitting gap}
 \vspace{2pt}
 \begin{columns}[c]
 \begin{column}{0.60\linewidth}
-\includegraphics[width=\textwidth]{results/neural_net/nn_pred_vs_actual.png}
+\includegraphics[width=\textwidth]{../results/neural_net/nn_pred_vs_actual.png}
 \end{column}
 \begin{column}{0.36\linewidth}
 \centering
