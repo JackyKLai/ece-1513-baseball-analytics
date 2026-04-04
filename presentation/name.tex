@@ -1,0 +1,153 @@
+\documentclass{beamer}
+\usetheme{Madrid}
+\usecolortheme{default}
+
+\title[Baseball Analytics Using Machine Learning]
+{Baseball Analytics Using Machine Learning}
+
+\subtitle{ECE1513}
+
+\author[Mia Cong, Spiro Li, Jacky Lai] 
+{Yuan (Mia) Cong\inst{1} \and Spiro Li\inst{2} \and Jacky Lai\inst{3}}
+
+\institute[ ] % (optional)
+{
+  \inst{1}%
+  Department of Mechanical \& Industrial Engineering
+  \and
+  \inst{2}%
+  Department of Electrical and Computer Engineering
+  \and
+   \inst{3}%
+  Department of Mechanical \& Industrial Engineering
+}
+
+\date[IntroML] % (optional)
+{Introduction to Machine Learning -- Winter 2026}
+
+\logo{\includegraphics[height=0.8cm]{logo_uoft}}
+
+\definecolor{uoftblue}{RGB}{6,41,88}
+\setbeamercolor{titlelike}{bg=uoftblue}
+\setbeamerfont{title}{series=\bfseries}
+
+\usepackage{graphicx}
+\usepackage{tikz}
+\usepackage{xcolor}
+
+\begin{document}
+
+\frame{\titlepage}
+
+
+\begin{frame}
+\frametitle{Slide 1}
+This is some text in the first frame. This is some text in the first frame. This is some text in the first frame.
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Slide 2}
+
+In this slide, some important text will be
+\alert{highlighted} because it's important.
+Please, don't abuse it.
+
+\begin{block}{Remark}
+Sample text
+\end{block}
+
+\begin{alertblock}{Important theorem}
+Sample text in red box
+\end{alertblock}
+
+\begin{examples}
+Sample text in green box. The title of the block is ``Examples".
+\end{examples}
+\end{frame}
+
+\begin{frame}[t]
+\frametitle{Neural Network Results}
+ 
+\vspace{-2pt}
+{\scriptsize\color{gray}%
+FNN ~$\cdot$~ 15\,$\to$\,64\,$\to$\,32\,$\to$\,1 ~$\cdot$~ 3,137 params ~$\cdot$~ ReLU + linear output ~$\cdot$~ MSE loss ~$\cdot$~ Adam}
+ 
+\vspace{4pt}
+\begin{columns}[T]
+ 
+% ── LEFT COLUMN ──
+\begin{column}{0.47\textwidth}
+{\small\textbf{Training curve}}
+ 
+\vspace{2pt}
+\includegraphics[width=\textwidth]{results/neural_net/training_curve.png}
+ 
+\vspace{1pt}
+{\tiny\itshape\color{gray}%
+Early stopped at epoch 249 / 269 --- no overfitting gap}
+ 
+\vspace{4pt}
+{\scriptsize
+\begin{itemize}
+  \setlength{\itemsep}{1pt}
+  \item Mini-batch SGD ($B\!=\!32$) + Adam
+  \item Weight decay $\lambda\!=\!10^{-4}$, Dropout $p\!=\!0.2$
+  \item ${\sim}$570 train samples, 15\% for validation
+\end{itemize}
+}
+\end{column}
+ 
+% ── RIGHT COLUMN ──
+\begin{column}{0.50\textwidth}
+ 
+\begin{block}{\scriptsize vs.\ Pythagorean baseline (no learning)}
+\centering\vspace{2pt}
+\begin{columns}[c]
+\begin{column}{0.45\linewidth}
+\centering
+{\tiny\color{gray}MAE}\\[1pt]
+{\Large\textbf{\color{teal}9.85}}\\[1pt]
+{\tiny\color{gray}vs 10.73}
+\end{column}
+\begin{column}{0.45\linewidth}
+\centering
+{\tiny\color{gray}RMSE}\\[1pt]
+{\Large\textbf{\color{teal}12.59}}\\[1pt]
+{\tiny\color{gray}vs 13.48}
+\end{column}
+\end{columns}
+\vspace{2pt}
+\end{block}
+ 
+\vspace{2pt}
+{\small\textbf{Predicted vs.\ actual (test set)}}
+ 
+\vspace{2pt}
+\begin{columns}[c]
+\begin{column}{0.60\linewidth}
+\includegraphics[width=\textwidth]{results/neural_net/nn_pred_vs_actual.png}
+\end{column}
+\begin{column}{0.36\linewidth}
+\centering
+\colorbox{teal!10}{%
+\parbox{2cm}{\centering\vspace{3pt}
+{\small\textbf{\color{teal}${\sim}$8\% MAE}}\\
+{\small\textbf{\color{teal}improvement}}\\[2pt]
+{\tiny\color{gray}over no-learning}\\
+{\tiny\color{gray}baseline}
+\vspace{3pt}}}
+\end{column}
+\end{columns}
+ 
+\end{column}
+\end{columns}
+ 
+\end{frame}
+
+\begin{frame}
+	\frametitle{Slide 4 -- Maximum: \textit{Do not go beyond this}}
+	This is some text in the last slide.
+\end{frame}
+
+\end{document}
