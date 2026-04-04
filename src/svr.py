@@ -16,7 +16,7 @@ from sklearn.model_selection import GridSearchCV
 from sklearn.svm import SVR
 
 from data_pipeline import prepare_data, _REPO_ROOT
-from evaluate import compute_mae, compute_rmse
+from evaluate import compute_mae, compute_rmse, plot_pred_vs_actual
 
 
 def fit_svr(X_train, y_train, cv=5):
@@ -53,56 +53,6 @@ def _best_row_for_kernel(cv_results_df, kernel_name):
             'gamma': str(row['param_gamma']),
         },
     }
-
-
-def _plot_svr_diagnostics(y_true, y_pred, save_path=None, show=False):
-    y_true = np.asarray(y_true, dtype=float)
-    y_pred = np.asarray(y_pred, dtype=float)
-    abs_errors = np.abs(y_pred - y_true)
-
-    mae = compute_mae(y_true, y_pred)
-    rmse = compute_rmse(y_true, y_pred)
-
-    fig, ax = plt.subplots(figsize=(8.2, 7.0))
-
-    lo = min(y_true.min(), y_pred.min()) - 5
-    hi = max(y_true.max(), y_pred.max()) + 5
-    scatter = ax.scatter(
-        y_true,
-        y_pred,
-        c=abs_errors,
-        cmap='viridis',
-        alpha=0.90,
-        edgecolors='k',
-        linewidths=0.45,
-        s=42,
-    )
-    ax.plot([lo, hi], [lo, hi], color='#C44E52', linestyle='--', linewidth=1.4, label='Perfect prediction')
-    ax.set_xlim(lo, hi)
-    ax.set_ylim(lo, hi)
-    ax.set_aspect('equal', adjustable='box')
-    ax.set_xlabel('Actual Wins')
-    ax.set_ylabel('Predicted Wins')
-    ax.set_title('SVR Prediction vs Actual', fontsize=13, pad=10)
-    ax.grid(alpha=0.22)
-    ax.legend(loc='upper left', frameon=True, framealpha=0.92)
-    cbar = fig.colorbar(scatter, ax=ax, fraction=0.046, pad=0.04)
-    cbar.set_label('Absolute Error')
-
-    fig.suptitle(
-        f"SVR Diagnostics | MAE={mae:.3f}, RMSE={rmse:.3f}",
-        fontsize=12,
-        y=0.98,
-    )
-    fig.tight_layout()
-
-    if save_path:
-        os.makedirs(os.path.dirname(save_path) or '.', exist_ok=True)
-        fig.savefig(save_path, dpi=160, bbox_inches='tight')
-    if show:
-        plt.show()
-    else:
-        plt.close(fig)
 
 
 def _plot_svr_residual_hist(y_true, y_pred, save_path=None, show=False):
@@ -226,9 +176,10 @@ def run_svr_experiment(csv_path=None, cv=5, save_plot=True, show_plot=False):
         save_path = os.path.join(_REPO_ROOT, 'results', 'svr', 'svr_pred_vs_actual.png')
         residual_save_path = os.path.join(_REPO_ROOT, 'results', 'svr', 'svr_residual_hist.png')
         kernel_save_path = os.path.join(_REPO_ROOT, 'results', 'svr', 'svr_kernel_cv_mae.png')
-    _plot_svr_diagnostics(
+    plot_pred_vs_actual(
         y_test,
         y_pred,
+        model_name='SVR',
         save_path=save_path,
         show=show_plot,
     )
