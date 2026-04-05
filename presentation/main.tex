@@ -346,4 +346,80 @@ Regression ~$\cdot$~ Best alpha: 88.6}
 
 \end{frame}
 
+\begin{frame}[t]
+\frametitle{Comparison \& Conclusions}
+
+\vspace{-4pt}
+
+% ── COMPARISON TABLE ──
+\begin{center}
+{\small
+\begin{tabular}{@{}l c c c c@{}}
+\hline
+\textbf{Model} & \textbf{MAE} & \textbf{RMSE} & \textbf{Params} & \textbf{MAE $\Delta$} \\
+\hline
+Pythagorean       & 10.73 & 13.48 & 0 (formula)       & ---             \\
+\textbf{Ridge} ($\alpha\!=\!88.6$)  & \textbf{\color{teal}8.47}  & \textbf{\color{teal}10.95} & 15  & $-$21\%  \\
+SVR (linear, $C\!=\!0.1$)  & {\color{teal}8.52}  & {\color{teal}10.98} & \#SVs  & $-$21\%  \\
+Neural Net        & 9.85  & 12.59 & 3{,}137  & $-$8\%   \\
+\hline
+\end{tabular}}
+\end{center}
+
+\vspace{2pt}
+\begin{columns}[T]
+
+% ── LEFT COLUMN: WHY ──
+\begin{column}{0.52\textwidth}
+{\scriptsize\textbf{Why do simpler models win?}}
+
+\vspace{2pt}
+{\scriptsize
+\begin{itemize}
+  \setlength{\itemsep}{2pt}
+  \item \textbf{Limited data} (${\sim}$570 train rows):
+    more parameters $\Rightarrow$ higher memorization risk
+    {\tiny\color{gray}}
+  \item \textbf{Bias--variance trade-off:}
+    Ridge adds small bias, greatly reduces variance
+    {\tiny\color{gray}}
+  \item \textbf{SVR best kernel = linear} $\Rightarrow$ the
+    runs$\to$wins relationship is approximately linear;
+    RBF adds capacity the data doesn't need
+    {\tiny\color{gray}}
+  \item \textbf{NN:} universal approximation guarantees capacity
+    {\tiny\color{gray}}, but SGD on small data
+    may not find the optimum
+    {\tiny\color{gray}}
+\end{itemize}
+}
+\end{column}
+
+% ── RIGHT COLUMN: TAKEAWAYS ──
+\begin{column}{0.45\textwidth}
+\begin{block}{\scriptsize Key Takeaways}
+\vspace{-2pt}
+{\scriptsize
+\begin{enumerate}
+  \setlength{\itemsep}{2pt}
+  \item All ML models beat the no-learning baseline
+  \item \textbf{$\ell_2$ regularization}
+    {\tiny\color{gray}} is the single
+    most effective technique on small data
+  \item Model complexity must match data size ---
+    more params $\neq$ better
+    {\tiny\color{gray}}
+  \item Season-to-season randomness (injuries, trades)
+    sets a floor $\approx$\,Bayes error
+    {\tiny\color{gray}}
+\end{enumerate}
+}
+\vspace{-2pt}
+\end{block}
+\end{column}
+
+\end{columns}
+
+\end{frame}
+
 \end{document}
