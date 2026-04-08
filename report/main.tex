@@ -1,35 +1,202 @@
-\documentclass[11pt]{article}
+\documentclass{article}
+% if you need to pass options to natbib, use, e.g.:
+%     \PassOptionsToPackage{numbers, compress}{natbib}
+% before loading neurips_2023
+\usepackage[final]{neurips}
+% to avoid loading the natbib package, add option nonatbib:
+%    \usepackage[nonatbib]{neurips}
 
-\usepackage[margin=1in]{geometry}
-\usepackage{amsmath, amssymb}
-\usepackage{graphicx}
-\usepackage{booktabs}
-\usepackage{hyperref}
-\usepackage{natbib}
-\usepackage{caption}
-\usepackage{subcaption}
 
-\title{Predicting MLB Team Season Win Totals\\Using Machine Learning}
-\author{
-  % TODO
+\usepackage[utf8]{inputenc} % allow utf-8 input
+\usepackage[T1]{fontenc}    % use 8-bit T1 fonts
+\usepackage{hyperref}       % hyperlinks
+\usepackage{url}            % simple URL typesetting
+\usepackage{booktabs}       % professional-quality tables
+\usepackage{amsfonts}       % blackboard math symbols
+\usepackage{nicefrac}       % compact symbols for 1/2, etc.
+\usepackage{microtype}      % microtypography
+\usepackage{xcolor}         % colors
+
+
+\title{Baseball Analytics Using Machine Learning}
+
+
+% The \author macro works with any number of authors. There are two commands
+% used to separate the names and addresses of multiple authors: \And and \AND.
+%
+% Using \And between authors leaves it to LaTeX to determine where to break the
+% lines. Using \AND forces a line break at that point. So, if LaTeX puts 3 of 4
+% authors names on the first line, and the last on the second line, try using
+% \AND instead of \And before the third author name.
+
+
+\author{%
+  Yuan Cong\\
+  Department of Mechanical \& Industrial Engineering\\
+  University of Toronto\\
+  \texttt{yc.cong@mail.utoronto.ca} \\
+  % more authors
+  \And
+  Spiro Li\\
+  Department of Electrical and Computer Engineering\\
+  University of Toronto\\
+  \texttt{supeng.li@mail.utoronto.ca} \\
+  \And
+  Jacky Lai\\
+  Department of Mechanical \& Industrial Engineering\\
+  University of Toronto\\
+  \texttt{kt.lai@mail.utoronto.ca} \\
+  % \AND
+  % Coauthor \\
+  % Affiliation \\
+  % Address \\
+  % \texttt{email} \\
+  % \And
+  % Coauthor \\
+  % Affiliation \\
+  % Address \\
+  % \texttt{email} \\
+  % \And
+  % Coauthor \\
+  % Affiliation \\
+  % Address \\
+  % \texttt{email} \\
 }
-\date{Winter 2026 — ECE1513}
 
 \begin{document}
+
+
 \maketitle
 
+
 \begin{abstract}
-% TODO: Write abstract (Week 4)
+Using machine learning, this project takes a swing at the classic problem of predicting a sports team's wins using statistics. Baseball, being probably the most stats-obsessed sport out there, provided us with not only relatively abundant datasets, but also a pre-existing human solution as baseline to compare our solutions with. Our objective is to find out whether machine learning solutions (Ridge Regression, Support Vector Classifier, and Neural Network) are capable of solving this problem better than a human attempt. We also compare ML models against one another to find out which model is more effective at solving this problem.
 \end{abstract}
 
-\input{sections/introduction}
-\input{sections/data_baseline}
-\input{sections/ridge}
-\input{sections/svr}
-\input{sections/neural_net}
-\input{sections/comparison}
+\section*{Attestation of Teamwork}
+In the order of our names listed above, each member implemented and analyzed the results for an ML model: Ridge, SVR, and NN. Code outside of our respective directories (named after our models) was written in pair programming sections by all members on a call.
 
-\bibliographystyle{plainnat}
-\bibliography{references}
+
+
+\section{Introduction}
+Here, you explain briefly the target problem and motivation to solve it via Deep Learning.
+
+\section{Preliminaries and Problem Formulation}
+Here, you formulate the problem. Specify the ultimate goal. If there are some new concepts that you had to learn to understand this project, you could briefly explain them. 
+	
+\section{Design}
+You explain the details of your design, plot diagrams if needed and name the key components. 
+
+
+
+
+\section{Methodology}
+You should explain the algorithms you have used in your design and include pseudo-code if necessary. If an algorithm is new, you should briefly explain it. You may also name the specific modules and/or libraries you have used for implementation.
+
+
+\section{Numerical Experiments}
+
+You explain the experiments you have conducted to check your implemented design. You must also specify all values and parameters you have considered in the simulation, plot the learning curves or show the test values in the form of tables. If you have a demo test, you could also present it here. Also, if you compare your implementation against a benchmark or a reference setting, you should explain what the benchmark is and specify how you got the results for the benchmark (it's all OK if you get the result for the benchmark from an already implemented code or copy it from a paper, you should just cite them).
+
+\subsection{Including Figures}
+
+
+\begin{figure}
+  \centering
+  \fbox{\rule[-.5cm]{0cm}{4cm} \rule[-.5cm]{4cm}{0cm}}
+  \caption{Sample figure caption.}
+\end{figure}
+
+
+
+\subsection{Including Tables}
+
+\begin{table}
+  \caption{Sample table title}
+  \label{sample-table}
+  \centering
+  \begin{tabular}{lll}
+    \toprule
+    \multicolumn{2}{c}{Part}                   \\
+    \cmidrule(r){1-2}
+    Architecture     & Result 1     & Result 2 \\
+    \midrule
+    CNN & 1\%  &1\%   \\
+    ResNet     &1\% &1\%      \\
+    LSTM     &1\%       &   \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\section{Discussion}
+You may include answer to research questions here.
+	
+
+\section{Conclusions}
+You should shortly conclude what you learned during project. Also, if you have any idea for further improvement of the results or extension, you may mention it here.
+	
+	
+
+
+\section*{References}
+Include all references here. It’s important to have your references cited.
+\medskip
+{
+\small
+
+
+[1] Alexander, J.A.\ \& Mozer, M.C.\ (1995) Template-based algorithms for
+connectionist rule extraction. In G.\ Tesauro, D.S.\ Touretzky and T.K.\ Leen
+(eds.), {\it Advances in Neural Information Processing Systems 7},
+pp.\ 609--616. Cambridge, MA: MIT Press.
+
+
+[2] Bower, J.M.\ \& Beeman, D.\ (1995) {\it The Book of GENESIS: Exploring
+  Realistic Neural Models with the GEneral NEural SImulation System.}  New York:
+TELOS/Springer--Verlag.
+
+
+[3] Hasselmo, M.E., Schnell, E.\ \& Barkai, E.\ (1995) Dynamics of learning and
+recall at excitatory recurrent synapses and cholinergic modulation in rat
+hippocampal region CA3. {\it Journal of Neuroscience} {\bf 15}(7):5249-5262.
+}
+
+\section*{Appendix}
+Any descriptions about supplementary materials go here.
+
+
+\newpage
+\section*{AI Usage}
+Please explain in one paragraph how you have used AI to accomplish this project. If you have not used AI at all, please indicate that you have not used it. 
+
+\section*{Contest for Information Sharing}
+As part of this course, we may share selected project materials (e.g., reports, presentation slides, and presentation recordings) on the course webpage as learning resources for future students. Additionally, we may use anonymized project information for internal statistical analysis of course outcomes. Please indicate your preferences below. \textit{Your choices will not affect your grade in any way.}
+
+\subsection*{Consent for Sharing Project Materials}
+\textit{Please keep the item you wish and remove the other one.}
+
+\begin{itemize}
+	\item All group members consent to allow the project materials (report, slides, and presentation recording) to be shared on the course page for future students.
+	\item The group members do \textbf{not} consent to allow the project materials (report, slides, and presentation recording) to be shared on the course page for future students.
+\end{itemize}
+
+\subsection*{Consent for Use of Project Information in Statistical Analysis}
+\textit{Please keep the item you wish and remove the other one.}
+\begin{itemize}
+	\item All group members consent to allow anonymized information about the project (e.g., topic, methods, outcomes, grades) to be used by the instructor for statistical analysis and course improvement.
+	\item The group members do \textbf{not} consent to allow anonymized information about the project (e.g., topic, methods, outcomes, grades) to be used by the instructor for statistical analysis and course improvement.
+\end{itemize}
+
+\subsection*{Optional Comments}
+\textit{Please list any specific conditions or comments here.}
+
+\subsection*{Group Identification}
+
+\begin{itemize}
+	\item Group number:
+	\item Names of group members: 
+	\item Signature of of group members: 
+	\item Date: 
+\end{itemize}
 
 \end{document}
