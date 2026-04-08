@@ -1,16 +1,8 @@
-"""
-Support Vector Regression (SVR) model for MLB win prediction.
-
-Based on Lectures 8–10 (SVC/SVM, kernel methods).
-
-TODO:
-    - Implement fit_svr() with grid search over kernel, C, epsilon
-    - Compare linear vs RBF kernels
-    - Discuss why nonlinear kernels might capture feature interactions
-"""
 import os
 import numpy as np
 import pandas as pd
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from sklearn.model_selection import GridSearchCV, KFold
 from sklearn.svm import SVR
@@ -21,26 +13,42 @@ from evaluate import compute_mae, compute_rmse, plot_pred_vs_actual
 KERNELS_TO_COMPARE = ['linear', 'rbf', 'poly']
 
 
-def fit_svr(X_train, y_train, cv=5, shuffle_cv=False, cv_random_state=None):
+def fit_svr(X_train, y_train, cv=5, shuffle_cv=False, cv_random_state=None, n_jobs=-1):
     cv_strategy = cv
     if isinstance(cv, int) and shuffle_cv:
         cv_strategy = KFold(n_splits=cv, shuffle=True, random_state=cv_random_state)
 
-    param_grid = {
-        'kernel': KERNELS_TO_COMPARE,
+    base_grid = {
         'C': [0.1, 1.0, 10.0, 50.0],
         'epsilon': [0.1, 0.5, 1.0, 2.0],
-        'gamma': ['scale', 0.01, 0.1],
-        'degree': [2, 3],
-        'coef0': [0.0, 1.0],
     }
+    param_grid = []
+    if 'linear' in KERNELS_TO_COMPARE:
+        param_grid.append({
+            'kernel': ['linear'],
+            **base_grid,
+        })
+    if 'rbf' in KERNELS_TO_COMPARE:
+        param_grid.append({
+            'kernel': ['rbf'],
+            **base_grid,
+            'gamma': ['scale', 0.01, 0.1],
+        })
+    if 'poly' in KERNELS_TO_COMPARE:
+        param_grid.append({
+            'kernel': ['poly'],
+            **base_grid,
+            'gamma': ['scale', 0.01, 0.1],
+            'degree': [2, 3],
+            'coef0': [0.0, 1.0],
+        })
 
     grid = GridSearchCV(
         estimator=SVR(),
         param_grid=param_grid,
         scoring='neg_mean_absolute_error',
         cv=cv_strategy,
-        n_jobs=1,
+        n_jobs=n_jobs,
         refit=True,
     )
     grid.fit(X_train, y_train)
@@ -52,15 +60,24 @@ def _best_row_for_kernel(cv_results_df, kernel_name):
     if rows.empty:
         return None
     row = rows.loc[rows['rank_test_score'].idxmin()]
+    gamma = row['param_gamma'] if 'param_gamma' in row.index else None
+    degree = row['param_degree'] if 'param_degree' in row.index else None
+    coef0 = row['param_coef0'] if 'param_coef0' in row.index else None
+    if pd.isna(gamma):
+        gamma = None
+    if pd.isna(degree):
+        degree = None
+    if pd.isna(coef0):
+        coef0 = None
     return {
         'kernel': kernel_name,
         'mae_cv': float(-row['mean_test_score']),
         'params': {
             'C': float(row['param_C']),
             'epsilon': float(row['param_epsilon']),
-            'gamma': str(row['param_gamma']),
-            'degree': int(row['param_degree']),
-            'coef0': float(row['param_coef0']),
+            'gamma': gamma if gamma is None else str(gamma),
+            'degree': None if degree is None else int(degree),
+            'coef0': None if coef0 is None else float(coef0),
         },
     }
 
@@ -179,6 +196,7 @@ def run_svr_experiment(
     show_plot=False,
     shuffle_cv=False,
     cv_random_state=None,
+    n_jobs=-1,
 ):
     data = prepare_data(csv_path)
     X_train = data['X_train_scaled']
@@ -192,6 +210,7 @@ def run_svr_experiment(
         cv=cv,
         shuffle_cv=shuffle_cv,
         cv_random_state=cv_random_state,
+        n_jobs=n_jobs,
     )
     model = grid.best_estimator_
     y_pred = model.predict(X_test)
@@ -249,7 +268,7 @@ def run_svr_experiment(
     }
 
 
-def run_svr_multi_seed(csv_path=None, seeds=range(10), cv=5):
+def run_svr_multi_seed(csv_path=None, seeds=range(10), cv=5, n_jobs=-1):
     rows = []
     for seed in seeds:
         result = run_svr_experiment(
@@ -259,15 +278,16 @@ def run_svr_multi_seed(csv_path=None, seeds=range(10), cv=5):
             show_plot=False,
             shuffle_cv=True,
             cv_random_state=seed,
+            n_jobs=n_jobs,
         )
         rows.append({
             'seed': int(seed),
             'kernel': result['best_params']['kernel'],
             'C': float(result['best_params']['C']),
             'epsilon': float(result['best_params']['epsilon']),
-            'gamma': str(result['best_params']['gamma']),
-            'degree': int(result['best_params']['degree']),
-            'coef0': float(result['best_params']['coef0']),
+            'gamma': result['best_params'].get('gamma'),
+            'degree': result['best_params'].get('degree'),
+            'coef0': result['best_params'].get('coef0'),
             'cv_mae': float(result['best_cv_mae']),
             'test_mae': float(result['mae']),
             'test_rmse': float(result['rmse']),
